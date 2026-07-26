@@ -46,3 +46,10 @@ body {
   font-size: 18px;
   opacity: 0.8;
 }
+
+header { 
+  display:flex;
+
+  justify-content: space-between;
+} 
+
