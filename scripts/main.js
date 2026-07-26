@@ -5,12 +5,11 @@ const songElement = document.getElementById("song");
 const platformElement = document.getElementById("platform");
 
 const widgetData = {
-   location: {
-    icon: "📍",
+     location: {
     city: "Santa Fe",
     latitude: -31.63,
     longitude: -60.70
-},
+    },
 
     temperature: {
         value: 30,
@@ -19,11 +18,10 @@ const widgetData = {
     },
 
     music: {
-        song: "Swing",
-        artist: "Danny Ocean",
-        platform: "Spotify",
-        icon: "🟢"
-    },
+    song: "Swing",
+    artist: "Danny Ocean",
+    platform: "Spotify"
+   },
 
     image: "download.jpg"
 };
@@ -82,7 +80,7 @@ function renderWidget() {
     const { location, temperature, music } = widgetData;
 
     cityElement.textContent =
-        `${location.icon} ${location.city}`;
+    `📍 ${location.city}`;
 
     temperatureElement.textContent =
         `${temperature.icon} ${temperature.value}${temperature.unit}`;
@@ -91,13 +89,21 @@ function renderWidget() {
         `🎵 ${music.song} - ${music.artist}`;
 
     platformElement.textContent =
-        `${music.icon} ${music.platform}`;
+    `🟢 ${music.platform}`;
+}
+async function refreshWidget() {
+    try {
+        await getWeather();
+        renderWidget();
+    } catch (error) {
+        console.error("Error actualizando el widget:", error);
+    }
 }
 async function init() {
 
-    await getWeather();
+    await refreshWidget();
 
-    renderWidget();
+    setInterval(refreshWidget, 10 * 60 * 1000);
 }
 
 init();
