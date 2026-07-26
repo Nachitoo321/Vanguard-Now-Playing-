@@ -19,6 +19,15 @@ body {
   font-family: "Times New Roman", Times, serif;
 }
 
+#background { 
+  flex: 1;
+
+  background-image: url("download.jpg");
+  background-size: cover;
+  background-position: 35% 35%;
+  background-repeat: no-repeat;
+}
+
 #content {
   height: 100%;
   width: 100%;
