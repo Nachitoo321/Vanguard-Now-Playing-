@@ -28,17 +28,53 @@ const widgetData = {
     image: "download.jpg"
 };
 
+const weatherIcons = {
+    0: "☀️",
+    1: "🌤️",
+    2: "⛅",
+    3: "☁️",
+
+    45: "🌫️",
+    48: "🌫️",
+
+    51: "🌦️",
+    53: "🌦️",
+    55: "🌦️",
+
+    61: "🌧️",
+    63: "🌧️",
+    65: "🌧️",
+
+    71: "❄️",
+    73: "❄️",
+    75: "❄️",
+
+    80: "🌦️",
+    81: "🌦️",
+    82: "🌧️",
+
+    95: "⛈️",
+    96: "⛈️",
+    99: "⛈️"
+};
+
 async function getWeather() {
 
     const { latitude, longitude } = widgetData.location;
 
     const response = await fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m`
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code`
     );
 
     const data = await response.json();
 
-    widgetData.temperature.value = Math.round(data.current.temperature_2m);
+    const weatherCode = data.current.weather_code;
+
+    widgetData.temperature.value =
+        Math.round(data.current.temperature_2m);
+
+    widgetData.temperature.icon =
+    weatherIcons[weatherCode] ?? "❓";
 }
 
 function renderWidget() {
