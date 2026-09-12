@@ -6,9 +6,11 @@
   <title>NachitoWidget</title>
   <link rel="icon" href="resources/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="common/tools/media_viewer/MediaViewer.css">
+  <meta name="x-icue-property" content="backgroundMedia" data-label="'Imagen de fondo'" data-type="media-selector" data-filters="['*.png', '*.jpg', '*.jpeg', '*.webp', '*.gif']">
   <meta name="x-icue-property" content="weatherCity" data-label="'Ciudad (ej.: Rosario, Argentina)'" data-type="textfield" data-default="'Santa Fe, Argentina'">
   <script type="application/json" id="x-icue-groups">
-    [{"title":"'Clima'","properties":["weatherCity"]}]
+    [{"title":"'Clima'","properties":["weatherCity"]},{"title":"'Fondo'","properties":["backgroundMedia"]}]
   </script>
 </head>
 <body>
@@ -20,7 +22,8 @@
     <span id="temperature"></span>
 </header>
 
-    <section id="background"> 
+    <section id="background" aria-hidden="true">
+      <div id="background-media"></div>
 
 
     </section>
@@ -39,5 +42,7 @@
   <script src="common/plugins/SimpleMediaApiWrapper.js"></script>
   <script src="scripts/song-scroller.js"></script>
   <script src="scripts/main.js"></script>
+  <script src="common/tools/media_viewer/MediaViewer.js"></script>
+  <script src="scripts/background.js"></script>
 </body>
 </html>
