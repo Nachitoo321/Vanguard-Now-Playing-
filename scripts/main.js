@@ -79,9 +79,14 @@ function applyWeatherSettings() {
 }
 
 icueEvents = {
-    onICUEInitialized: applyWeatherSettings,
-    onDataUpdated: applyWeatherSettings
+    onICUEInitialized: applyWidgetSettings,
+    onDataUpdated: applyWidgetSettings
 };
+
+function applyWidgetSettings() {
+    applyWeatherSettings();
+    window.widgetBackground?.update();
+}
 
 async function getWeather(version, signal) {
     let location = locationCache.get(weatherQuery);
