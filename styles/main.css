@@ -70,3 +70,21 @@ footer {
     );
 }
 
+#song-viewport {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+#song {
+    display: inline-block;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #song-viewport {
+        overflow-x: auto;
+    }
+}
+

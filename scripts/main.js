@@ -143,10 +143,15 @@ function renderWidget() {
         temperature.value === null ? weatherStatus :
         `${temperature.icon} ${temperature.value}${temperature.unit}`;
 
-    songElement.textContent =
+    const songText =
         music.song || music.artist
             ? `🎵 ${[music.song, music.artist].filter(Boolean).join(" - ")}`
             : music.status;
+
+    if (songElement.textContent !== songText) {
+        songElement.textContent = songText;
+        window.songScroller?.refresh();
+    }
 
     platformElement.textContent =
         mediaApi ? "Multimedia · iCUE" : "";
@@ -159,7 +164,6 @@ async function refreshMusic() {
     if (!mediaApi || mediaRefreshPending) return;
     mediaRefreshPending = true;
     try {
-        // Wait for both requests, including timeouts, before allowing another poll.
         const results = await Promise.allSettled([
             mediaApi.getSongName(), mediaApi.getArtist()
         ]);
