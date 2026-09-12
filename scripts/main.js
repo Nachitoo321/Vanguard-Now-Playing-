@@ -56,16 +56,69 @@ const weatherIcons = {
     99: "⛈️"
 };
 
-async function getWeather() {
+let weatherVersion = 0;
+let weatherController = null;
+let weatherSettingsTimer = null;
+let weatherQuery = "Santa Fe, Argentina";
+let weatherStatus = "Cargando clima…";
+const locationCache = new Map([[weatherQuery, { ...widgetData.location }]]);
 
-    const { latitude, longitude } = widgetData.location;
+function applyWeatherSettings() {
+    const query = typeof weatherCity === "string" ? weatherCity.trim() : weatherQuery;
+    if (query === weatherQuery) return;
+    weatherQuery = query;
+    weatherVersion++;
+    weatherController?.abort();
+    clearTimeout(weatherSettingsTimer);
+    widgetData.location.city = query || "Elegí una ciudad";
+    widgetData.temperature.value = null;
+    weatherStatus = query.length < 2 ? "Ingresá una ciudad" : "Buscando ciudad…";
+    renderWidget();
+    
+    weatherSettingsTimer = setTimeout(refreshWidget, 700);
+}
+
+icueEvents = {
+    onICUEInitialized: applyWeatherSettings,
+    onDataUpdated: applyWeatherSettings
+};
+
+async function getWeather(version, signal) {
+    let location = locationCache.get(weatherQuery);
+    if (!location) {
+        const response = await fetch(
+            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(weatherQuery)}&count=2&language=es&format=json`,
+            { signal }
+        );
+        if (!response.ok) throw new Error("No se pudo buscar la ciudad");
+        const data = await response.json();
+        if (version !== weatherVersion) return;
+        if (!data.results?.length) throw new Error("Ciudad no encontrada");
+        if (data.results.length > 1) throw new Error("Agregá país o provincia a la ciudad");
+        const place = data.results[0];
+        if (!Number.isFinite(place.latitude) || !Number.isFinite(place.longitude)) {
+            throw new Error("La ciudad no tiene coordenadas válidas");
+        }
+        location = {
+            city: place.name,
+            latitude: place.latitude,
+            longitude: place.longitude
+        };
+        locationCache.set(weatherQuery, location);
+    }
+    if (version !== weatherVersion) return;
+    widgetData.location = { ...location };
+
+    const { latitude, longitude } = location;
 
     const response = await fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code`
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code`,
+        { signal }
     );
 
     if (!response.ok) throw new Error(`Clima: HTTP ${response.status}`);
     const data = await response.json();
+    if (version !== weatherVersion) return;
     if (!Number.isFinite(data.current?.temperature_2m)) {
         throw new Error("El clima no devolvió una temperatura válida");
     }
@@ -87,7 +140,7 @@ function renderWidget() {
     `📍 ${location.city}`;
 
     temperatureElement.textContent =
-        temperature.value === null ? "Clima no disponible" :
+        temperature.value === null ? weatherStatus :
         `${temperature.icon} ${temperature.value}${temperature.unit}`;
 
     songElement.textContent =
@@ -143,7 +196,6 @@ function onMediaInitialized() {
     setInterval(refreshMusic, 2000);
 }
 
-// iCUE injects this global event map. A bare assignment also works in a browser preview.
 pluginMediadataproviderEvents = {
     onInitialized: onMediaInitialized
 };
@@ -154,14 +206,27 @@ if (typeof pluginMediadataprovider_initialized !== "undefined") {
 }
 
 async function refreshWidget() {
+    weatherController?.abort();
+    const controller = new AbortController();
+    weatherController = controller;
+    const version = ++weatherVersion;
+    if (weatherQuery.length < 2) return;
+    const timeout = setTimeout(() => controller.abort(), 15000);
     try {
-        await getWeather();
-        renderWidget();
+        await getWeather(version, controller.signal);
     } catch (error) {
+        if (version !== weatherVersion) return;
+        widgetData.temperature.value = null;
+        weatherStatus = error.name === "AbortError" ? "Clima no disponible" : error.message;
         console.error("Error actualizando el widget:", error);
+    } finally {
+        clearTimeout(timeout);
+        if (version === weatherVersion) renderWidget();
     }
 }
 async function init() {
+    applyWeatherSettings();
+    clearTimeout(weatherSettingsTimer);
     renderWidget();
     void refreshWidget();
     setInterval(refreshWidget, 10 * 60 * 1000);

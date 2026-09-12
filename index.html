@@ -6,14 +6,10 @@
   <title>NachitoWidget</title>
   <link rel="icon" href="resources/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles/main.css">
-  <meta name="x-icue-property" content='{"name":"headline","label":"Headline","type":"text","default":"Hello World"}'>
-  <meta name="x-icue-property" content='{"name":"showSubtitle","label":"Show Subtitle","type":"boolean","default":true}'>
-  <meta name="x-icue-property" content='{"name":"subtitle","label":"Subtitle","type":"text","default":"Built with iCUE Widget CLI"}'>
-  <meta name="x-icue-property" content='{"name":"textColor","label":"Text Color","type":"color","default":"#ffffff"}'>
-  <meta name="x-icue-property" content='{"name":"accentColor","label":"Accent Color","type":"color","default":"#59c2ff"}'>
-  <meta name="x-icue-property" content='{"name":"backgroundColor","label":"Background","type":"color","default":"#111827"}'>
-  <meta name="x-icue-property" content='{"name":"transparency","label":"Transparency","type":"number","min":0,"max":100,"default":20}'>
-  
+  <meta name="x-icue-property" content="weatherCity" data-label="'Ciudad (ej.: Rosario, Argentina)'" data-type="textfield" data-default="'Santa Fe, Argentina'">
+  <script type="application/json" id="x-icue-groups">
+    [{"title":"'Clima'","properties":["weatherCity"]}]
+  </script>
 </head>
 <body>
   <main id="content">
