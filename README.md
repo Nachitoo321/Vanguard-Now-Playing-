@@ -27,11 +27,15 @@ El proyecto combina información del clima con la reproducción multimedia actua
 
 ### Widget funcionando en el teclado
 
-![Brisa & Ritmo funcionando en Corsair Vanguard Pro 96](docs/pantalla%20fisica.jpg)
+<p align="center">
+  <img src="docs/pantalla%20fisica.jpg" width="500" alt="Brisa & Ritmo funcionando en Corsair Vanguard Pro 96">
+</p>
 
 ### Configuración dentro de Corsair iCUE
 
-![Brisa & Ritmo configurado en Corsair iCUE](docs/Captura%20dentro%20de%20ICUE.png)
+<p align="center">
+  <img src="docs/Captura%20dentro%20de%20ICUE.png" width="700" alt="Brisa & Ritmo configurado en Corsair iCUE">
+</p>
 
 ## 💡 Sobre el proyecto
 
