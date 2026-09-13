@@ -1,5 +1,5 @@
 {
-  "widget_name": "NachitoWidget",
+  "widget_name": "Brisa & Ritmo",
   "Layout": "Layout",
   "Widget Personalization": "Widget Personalization",
   "Headline": "Headline",
@@ -9,5 +9,6 @@
   "Accent Color": "Accent Color",
   "Background": "Background",
   "Transparency": "Transparency",
-  "Hello World": "Hello World"
+  "Hello World": "Hello World",
+  "Brisa & Ritmo": "Brisa & Ritmo"
 }

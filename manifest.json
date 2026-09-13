@@ -1,11 +1,11 @@
 {
   "author": "Nachitoorn",
   "id": "com.corsair.nachitowidget",
-  "name": "NachitoWidget",
-  "description": "Widget for Vanguard Pro 96",
-  "version": "1.0.0",
+  "name": "Brisa & Ritmo",
+  "description": "Clima y música para Vanguard Pro 96",
+  "version": "1.0.2",
   "preview_icon": "resources/icon.svg",
-  "min_app_version": "5.45",
+  "min_app_version": "5.47",
   "min_framework_version": "1.0.0",
   "required_plugins": [
     "widgetbuilder.mediadataprovider:Media:1.0"
@@ -16,6 +16,9 @@
     }
   ],
   "supported_devices": [
+    {
+      "type": "keyboard_lcd"
+    },
     {
       "type": "dashboard_lcd"
     }

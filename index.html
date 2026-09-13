@@ -1,14 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>NachitoWidget</title>
-  <link rel="icon" href="resources/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles/main.css">
-  <link rel="stylesheet" href="common/tools/media_viewer/MediaViewer.css">
-  <meta name="x-icue-property" content="backgroundMedia" data-label="'Imagen de fondo'" data-type="media-selector" data-filters="['*.png', '*.jpg', '*.jpeg', '*.webp', '*.gif']">
-  <meta name="x-icue-property" content="weatherCity" data-label="'Ciudad (ej.: Rosario, Argentina)'" data-type="textfield" data-default="'Santa Fe, Argentina'">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>tr('Brisa &amp; Ritmo')</title>
+  <link rel="icon" href="resources/icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="common/tools/media_viewer/MediaViewer.css" />
+  <meta name="x-icue-property" content="backgroundMedia" data-label="'Imagen de fondo'" data-type="media-selector" data-filters="['*.png', '*.jpg', '*.jpeg', '*.webp', '*.gif']" />
+  <meta name="x-icue-property" content="weatherCity" data-label="'Ciudad (ej.: Rosario, Argentina)'" data-type="textfield" data-default="'Santa Fe, Argentina'" />
   <script type="application/json" id="x-icue-groups">
     [{"title":"'Clima'","properties":["weatherCity"]},{"title":"'Fondo'","properties":["backgroundMedia"]}]
   </script>
@@ -20,6 +20,7 @@
     <span id="city"></span>
 
     <span id="temperature"></span>
+    <time id="clock" aria-label="Hora local"></time>
 </header>
 
     <section id="background" aria-hidden="true">
@@ -30,9 +31,8 @@
 
  <footer>
 
+    <span id="music-icon" aria-hidden="true">🎵</span>
     <div id="song-viewport"><span id="song"></span></div>
-
-    <div id="platform"></div>
 
 </footer>
   
