@@ -23,6 +23,16 @@ El proyecto combina información del clima con la reproducción multimedia actua
 - JSON
 - Corsair iCUE
 
+## 📸 Resultado
+
+### Widget funcionando en el teclado
+
+![Brisa & Ritmo funcionando en Corsair Vanguard Pro 96](docs/pantalla%20fisica.jpg)
+
+### Configuración dentro de Corsair iCUE
+
+![Brisa & Ritmo configurado en Corsair iCUE](docs/Captura%20dentro%20de%20ICUE.png)
+
 ## 💡 Sobre el proyecto
 
 Este fue uno de mis primeros proyectos trabajando con **HTML, CSS, JavaScript y APIs**.
