@@ -2,7 +2,14 @@ const cityElement = document.getElementById("city");
 const temperatureElement = document.getElementById("temperature");
 
 const songElement = document.getElementById("song");
-const platformElement = document.getElementById("platform");
+const clockElement = document.getElementById("clock");
+const clockFormat = new Intl.DateTimeFormat("es-AR", { hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+
+function updateClock() {
+    const now = new Date();
+    clockElement.textContent = clockFormat.format(now);
+    clockElement.dateTime = now.toISOString();
+}
 
 const widgetData = {
      location: {
@@ -61,12 +68,18 @@ let weatherController = null;
 let weatherSettingsTimer = null;
 let weatherQuery = "Santa Fe, Argentina";
 let weatherStatus = "Cargando clima…";
+let weatherRetry = null;
+let weatherFailures = 0;
+let weatherStale = false;
 const locationCache = new Map([[weatherQuery, { ...widgetData.location }]]);
 
 function applyWeatherSettings() {
     const query = typeof weatherCity === "string" ? weatherCity.trim() : weatherQuery;
     if (query === weatherQuery) return;
     weatherQuery = query;
+    clearTimeout(weatherRetry);
+    weatherFailures = 0;
+    weatherStale = false;
     weatherVersion++;
     weatherController?.abort();
     clearTimeout(weatherSettingsTimer);
@@ -146,11 +159,11 @@ function renderWidget() {
 
     temperatureElement.textContent =
         temperature.value === null ? weatherStatus :
-        `${temperature.icon} ${temperature.value}${temperature.unit}`;
+        `${temperature.icon} ${temperature.value}${temperature.unit}${weatherStale ? " ↻" : ""}`;
 
     const songText =
         music.song || music.artist
-            ? `🎵 ${[music.song, music.artist].filter(Boolean).join(" - ")}`
+            ? `${[music.song, music.artist].filter(Boolean).join(" - ")}`
             : music.status;
 
     if (songElement.textContent !== songText) {
@@ -158,8 +171,6 @@ function renderWidget() {
         window.songScroller?.refresh();
     }
 
-    platformElement.textContent =
-        mediaApi ? "Multimedia · iCUE" : "";
 }
 
 let mediaApi = null;
@@ -215,6 +226,7 @@ if (typeof pluginMediadataprovider_initialized !== "undefined") {
 }
 
 async function refreshWidget() {
+    clearTimeout(weatherRetry);
     weatherController?.abort();
     const controller = new AbortController();
     weatherController = controller;
@@ -223,10 +235,18 @@ async function refreshWidget() {
     const timeout = setTimeout(() => controller.abort(), 15000);
     try {
         await getWeather(version, controller.signal);
+        if (version !== weatherVersion) return;
+        weatherFailures = 0;
+        weatherStale = false;
     } catch (error) {
         if (version !== weatherVersion) return;
-        widgetData.temperature.value = null;
-        weatherStatus = error.name === "AbortError" ? "Clima no disponible" : error.message;
+        const locationError = ["Ciudad no encontrada", "Agregá país o provincia a la ciudad", "La ciudad no tiene coordenadas válidas"].includes(error.message);
+        weatherStale = widgetData.temperature.value !== null;
+        weatherStatus = locationError ? error.message : "Clima no disponible · reintentando…";
+        if (!locationError) {
+            weatherFailures++;
+            weatherRetry = setTimeout(refreshWidget, Math.min(30000 * 2 ** Math.min(weatherFailures - 1, 4), 300000));
+        }
         console.error("Error actualizando el widget:", error);
     } finally {
         clearTimeout(timeout);
@@ -234,6 +254,8 @@ async function refreshWidget() {
     }
 }
 async function init() {
+    updateClock();
+    setInterval(updateClock, 1000);
     applyWeatherSettings();
     clearTimeout(weatherSettingsTimer);
     renderWidget();
